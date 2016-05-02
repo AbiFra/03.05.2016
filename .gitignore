@@ -1,0 +1,35 @@
+install.packages("foreign")
+require (foreign)
+install.packages("fpp")
+library (fpp)
+PIB<- read.csv("C:\\Users\\SALA-C27\\Documents\\pib.csv")
+PIBts<-ts(PIB[,2], start = 1960,end = 2015)
+PIB1960<-window (PIBts,start=(1960), end=(2013))
+plot(PIB1960)
+require(fpp)
+plot(PIB1960, main=" Tasa de crecimiento del PIB en México 1960-2013", ylab="tasa de crecimoento", xla="Años")
+res2<-residuals(snaive(PIB1960))
+res3<-residuals(rwf(PIB1960, drift=T))
+res2
+res3
+plot(res2, main="residuales de ingenuo estacional", ylab="residuales", xlab="años")### para saber si la var es constante
+Acf(res2, main="Acf de residuales")### para saber si hay o no correlacion entre los reciduos
+hist(res2, main ="histograma de residuales" )### para conocer si los residuos se distribuyen normal
+
+plot(res3, main="residuales de ingenuo estacional", ylab="residuales", xlab="años")
+Acf(res3, main="Acf de residuales")
+hist(res3, main ="histograma de residuales" )
+
+res1<-residuals(meanf(PIB1960, 1))
+plot(res1, main="residuales de ingenuo estacional", ylab="residuales", xlab="años")
+Acf(res1, main="Acf de residuales")
+hist(res1, main ="histograma de residuales" )
+
+res4<-residuals(naive(PIB1960,1))
+plot(res4, main="residuales de ingenuo estacional", ylab="residuales", xlab="años")
+Acf(res4, main="Acf de residuales")
+hist(res4, main ="histograma de residuales" )
+
+Box.test(res1, lag=10, fitdf = 0) ## box-pierce si p-value es mayor que .05 se acepta la hipotesis nula
+Box.test(res1, lag=10, fitdf = 0, type="Lj ")## BOX-ljung
+help("Box.test")
